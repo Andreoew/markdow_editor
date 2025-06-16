@@ -9,6 +9,22 @@ def main(page: ft.Page):
         view.value = editor.value
         view.update()
         
+    def copy_to_clipboard(e):
+        page.set_clipboard(editor.value)
+        page.snack_bar = ft.SnackBar(
+            content=ft.Text("Markdown copiado para a área de transferência!"),
+            bgcolor=ft.Colors.GREEN,
+        )
+        page.snack_bar.open = True
+        page.update()
+
+    page.floating_action_button = ft.FloatingActionButton(
+        text="Copiar Markdown",
+        icon=ft.Icons.CONTENT_COPY,
+        on_click=copy_to_clipboard,
+        
+    )
+        
     editor = ft.TextField(
         multiline=True,
         min_lines=20,
@@ -61,8 +77,7 @@ def main(page: ft.Page):
         selectable=True,
         extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
         code_theme='monokai-sublime',
-        on_tap_link=lambda e: page.launch_url(e.data),
-        
+        on_tap_link=lambda e: page.launch_url(e.data),        
     )
     
     layout = ft.Row(
@@ -75,7 +90,7 @@ def main(page: ft.Page):
                 bgcolor=ft.Colors.WHITE,
                 content=ft.Column(
                     controls=[
-                        editor,
+                        editor,                        
                         how_to,
                     ]
                 )
@@ -84,7 +99,11 @@ def main(page: ft.Page):
                 expand=True,
                 padding=ft.padding.all(30),
                 bgcolor=ft.Colors.BLACK,                
-                content=view
+                content=ft.Column(
+                    controls=[
+                        view,
+                    ]
+                )
             ),
         ]
     )
